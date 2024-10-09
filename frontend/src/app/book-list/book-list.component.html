@@ -1,0 +1,63 @@
+<div class="mb-4">
+  <input 
+    [(ngModel)]="searchTerm" 
+    (ngModelChange)="filterBooks()"
+    placeholder="Search books..." 
+    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+  >
+</div>
+<div class="mb-4">
+  <label class="mr-2">Sort by:</label>
+  <select 
+    [(ngModel)]="sortBy" 
+    (ngModelChange)="sortBooks()"
+    class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+  >
+    <option value="title">Title</option>
+    <option value="author">Author</option>
+    <option value="publish_year">Publish Year</option>
+  </select>
+</div>
+
+<!-- Book list grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+  <div *ngFor="let book of filteredBooks" class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300">
+    <!-- Book cover container with consistent ratio -->
+    <div class="relative w-full h-0 pb-[150%] bg-gray-100">
+      <img 
+        *ngIf="book.cover_url; else defaultCover"
+        [src]="'http://localhost:3000' + book.cover_url" 
+        alt="{{ book.title }} cover" 
+        class="absolute inset-0 w-full h-full object-cover object-center"
+      >
+      <ng-template #defaultCover>
+        <img 
+          src="/assets/default-book-cover.png" 
+          alt="Default book cover" 
+          class="absolute inset-0 w-full h-full object-cover object-center"
+        >
+      </ng-template>
+    </div>
+    
+    
+    <!-- Book details -->
+    <div class="p-4">
+      <h3 class="text-lg font-semibold text-gray-900 truncate">
+        {{ book.title }}
+      </h3>
+      <p class="text-sm text-gray-500 truncate">
+        By {{ book.author }}
+      </p>
+      <p class="text-sm text-gray-500">
+        Published: {{ book.publish_year }}
+      </p>
+
+      <!-- View details link -->
+      <div class="mt-4">
+        <a [routerLink]="['/books', book.id]" class="text-indigo-600 hover:text-indigo-900 text-sm font-medium">
+          View Details
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
